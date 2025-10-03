@@ -8,6 +8,12 @@ import { Act1 } from '@/components/acts/Act1';
 import { Act2 } from '@/components/acts/Act2';
 import { Act3 } from '@/components/acts/Act3';
 import { Act4 } from '@/components/acts/Act4';
+import { Act5 } from '@/components/acts/Act5';
+import { Act6 } from '@/components/acts/Act6';
+import { Act7 } from '@/components/acts/Act7';
+import { Act8 } from '@/components/acts/Act8';
+import { Act9 } from '@/components/acts/Act9';
+import { Act10 } from '@/components/acts/Act10';
 
 const StoryContent = () => {
   const [started, setStarted] = useState(false);
@@ -27,19 +33,20 @@ const StoryContent = () => {
         return <Act3 />;
       case 4:
         return <Act4 />;
+      case 5:
+        return <Act5 />;
+      case 6:
+        return <Act6 />;
+      case 7:
+        return <Act7 />;
+      case 8:
+        return <Act8 />;
+      case 9:
+        return <Act9 />;
+      case 10:
+        return <Act10 />;
       default:
-        return (
-          <div className="min-h-screen flex items-center justify-center p-8">
-            <div className="text-center">
-              <h1 className="text-5xl font-bold mb-4 text-primary">
-                More Acts Coming Soon!
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                You've completed the first chapters of Sunny's adventure!
-              </p>
-            </div>
-          </div>
-        );
+        return <Act10 />;
     }
   };
 
