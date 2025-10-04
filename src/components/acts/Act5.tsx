@@ -4,16 +4,19 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act5 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const carefulTravel = story.decisions[3]?.choice === 'careful';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const carefulTravel = story.decisions.find(d => d.nodeId === 'deep-space')?.choice === 'careful';
 
   const handleChoice = (choice: 'save' | 'prank') => {
     const descriptions = {
       save: 'Saved Astronaut',
       prank: 'Pranked Astronaut',
     };
-    makeDecision(5, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('astronaut-crisis', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -29,8 +32,8 @@ export const Act5 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-blue-400 text-glow">
-            Act 5: Astronaut's Distress
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-blue-400 text-glow">
+            🚀 Astronaut's Distress
           </h1>
           <p className="text-xl text-muted-foreground">
             {carefulTravel 

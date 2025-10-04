@@ -4,17 +4,20 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act9 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const followedLunaEarly = story.decisions[1]?.choice === 'follow';
-  const protectedEarth = story.decisions[7]?.choice === 'protect';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const followedLunaEarly = story.decisions.find(d => d.nodeId === 'luna-meeting')?.choice === 'follow';
+  const protectedEarth = story.decisions.find(d => d.nodeId === 'cosmic-event')?.choice === 'protect';
 
   const handleChoice = (choice: 'team' | 'solo') => {
     const descriptions = {
       team: 'Team up with Luna',
       solo: 'Go solo',
     };
-    makeDecision(9, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('luna-reunion', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -30,8 +33,8 @@ export const Act9 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-secondary text-glow">
-            Act 9: Luna Returns
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-secondary text-glow">
+            🌙 Luna Returns
           </h1>
           <p className="text-xl text-muted-foreground">
             A familiar face appears in the cosmic dust...

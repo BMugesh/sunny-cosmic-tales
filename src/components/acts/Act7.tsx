@@ -4,16 +4,19 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act7 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const gentleEntry = story.decisions[5]?.choice === 'gentle';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const gentleEntry = story.decisions.find(d => d.nodeId === 'earth-atmosphere')?.choice === 'gentle';
 
   const handleChoice = (choice: 'listen' | 'ignore') => {
     const descriptions = {
       listen: 'Learned science',
       ignore: 'Ignored professor',
     };
-    makeDecision(7, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('professor-photon', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -29,8 +32,8 @@ export const Act7 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-purple-400 text-glow">
-            Act 7: Professor Photon
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-purple-400 text-glow">
+            🔬 Professor Photon
           </h1>
           <p className="text-xl text-muted-foreground">
             {gentleEntry 

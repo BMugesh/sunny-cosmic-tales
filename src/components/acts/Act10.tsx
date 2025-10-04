@@ -2,235 +2,189 @@ import { motion } from 'framer-motion';
 import { CharacterSprite } from '../CharacterSprite';
 import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
-import { Sparkles, Trophy, Laugh, Cloud, Heart } from 'lucide-react';
+import { Trophy, Heart, Sparkles, Zap, Globe } from 'lucide-react';
 
 export const Act10 = () => {
-  const { story, resetStory } = useStory();
+  const { resetStory, computeEnding, story } = useStory();
+  const ending = computeEnding();
 
-  // Determine ending based on decisions
-  const getEnding = () => {
-    const teamedUp = story.decisions[8]?.choice === 'team';
-    const savedAstronaut = story.decisions[4]?.choice === 'save';
-    const helpedSally = story.decisions[2]?.choice === 'help';
-    const followedLuna = story.decisions[1]?.choice === 'follow';
-    const protectedEarth = story.decisions[7]?.choice === 'protect';
-    const prankedAstronaut = story.decisions[4]?.choice === 'prank';
-    const scaredSally = story.decisions[2]?.choice === 'scare';
-
-    // Epic Heroes Ending
-    if (teamedUp && savedAstronaut && helpedSally && followedLuna && protectedEarth) {
-      return {
-        type: 'epic',
-        title: '🏆 Epic Heroes Ending',
-        icon: Trophy,
-        color: 'text-accent',
-        description: 'The Space Weather Heroes are born!',
-        story: (
-          <>
-            <p className="text-lg leading-relaxed mb-4">
-              Luna, Sunny, Sally, and Captain Starling gather in Earth's orbit. Professor 
-              Photon's hologram appears, beaming with pride.
-            </p>
-            <p className="text-lg leading-relaxed mb-4">
-              "You've proven yourselves to be Earth's greatest defenders!" the Professor announces. 
-              "From this day forward, you are officially the <span className="text-accent font-bold">Space Weather Heroes</span>!"
-            </p>
-            <p className="text-lg leading-relaxed mb-4">
-              Sally beeps excitedly. Captain Starling salutes. Luna grins at Sunny. "Not bad 
-              for a little solar flare, huh?"
-            </p>
-            <p className="text-lg leading-relaxed mb-6">
-              Together, they watch over Earth, ready to protect it from cosmic storms, guide 
-              lost spacecraft, and keep the planet safe. Sunny finally found their purpose—
-              and their family.
-            </p>
-            <p className="text-2xl text-center font-bold text-accent animate-pulse-glow">
-              ⭐ The Beginning of Legendary Adventures ⭐
-            </p>
-          </>
-        ),
-      };
-    }
-
-    // Funny Chaos Ending
-    if (prankedAstronaut || scaredSally || !protectedEarth) {
-      return {
-        type: 'funny',
-        title: '😂 Cosmic Comedian Ending',
-        icon: Laugh,
-        color: 'text-primary',
-        description: 'Space was never this entertaining!',
-        story: (
-          <>
-            <p className="text-lg leading-relaxed mb-4">
-              Sunny returns to the Sun, grinning from ear to ear. What a journey! Sure, they 
-              pranked an astronaut, scared a satellite, and maybe caused a few technical 
-              hiccups on Earth...
-            </p>
-            <p className="text-lg leading-relaxed mb-4">
-              But MAN, was it FUN! Captain Starling tells the prank story at every space bar. 
-              Sally's still nervous but secretly thinks Sunny is hilarious. Even Luna can't 
-              help but laugh.
-            </p>
-            <p className="text-lg leading-relaxed mb-6">
-              Earth's scientists scratch their heads at the "unpredictable" solar flare patterns. 
-              Little do they know, Sunny's just having a good time! They become known as the 
-              galaxy's most entertaining solar flare.
-            </p>
-            <p className="text-2xl text-center font-bold text-primary animate-pulse-glow">
-              🎭 The Cosmic Prankster Lives On! 🎭
-            </p>
-          </>
-        ),
-      };
-    }
-
-    // Lonely Journey Ending
-    if (!teamedUp && !followedLuna) {
-      return {
-        type: 'lonely',
-        title: '🌙 Solo Wanderer Ending',
-        icon: Cloud,
-        color: 'text-secondary',
-        description: 'Some journeys are taken alone...',
-        story: (
-          <>
-            <p className="text-lg leading-relaxed mb-4">
-              Sunny drifts through space, alone but free. They chose independence, their own 
-              path, their own way. No team, no rules, no compromises.
-            </p>
-            <p className="text-lg leading-relaxed mb-4">
-              Luna watches from a distance, a bit sad but understanding. "Maybe next time," 
-              she whispers. Sally beeps a farewell. Captain Starling waves goodbye.
-            </p>
-            <p className="text-lg leading-relaxed mb-6">
-              Sunny learned that freedom has a price—sometimes it means being alone. But they 
-              also learned they can handle anything space throws at them. They're independent, 
-              strong, and unafraid.
-            </p>
-            <p className="text-2xl text-center font-bold text-secondary">
-              🌟 A Lone Star in the Vast Cosmos 🌟
-            </p>
-          </>
-        ),
-      };
-    }
-
-    // Happy Aurora Ending (default)
-    return {
-      type: 'happy',
-      title: '🌈 Aurora Festival Ending',
-      icon: Heart,
+  const endings = {
+    'epic-heroes': {
+      title: '🏆 Epic Space Heroes!',
+      icon: Trophy,
+      description: 'Sunny, Luna, Sally, and Captain Starling unite to form the Space Weather Heroes—protectors of Earth and guardians of the cosmos!',
+      color: 'text-primary',
+      detail: `With Sunny's bravery, Luna's wisdom, Sally's trust, and the Captain's expertise, the team stands ready to face any cosmic threat. Earth celebrates their new protectors with auroras dancing across every sky!`,
+    },
+    'cosmic-comedian': {
+      title: '😂 The Cosmic Comedian!',
+      icon: Sparkles,
+      description: 'Sunny becomes a legendary prankster, traveling the cosmos creating harmless chaos and bringing laughter wherever they go!',
+      color: 'text-accent',
+      detail: `Space stations tell tales of the mischievous solar flare who made satellites dance and astronauts laugh. Earth's tech gets disrupted sometimes, but everyone agrees—Sunny made space a lot more fun!`,
+    },
+    'solo-wanderer': {
+      title: '⭐ The Solo Wanderer',
+      icon: Zap,
+      description: 'Sunny continues their journey alone, a free spirit exploring the infinite cosmos on their own terms.',
       color: 'text-secondary',
-      description: 'A beautiful celebration of light!',
-      story: (
-        <>
-          <p className="text-lg leading-relaxed mb-4">
-            Sunny's journey ends with a spectacular aurora display over Earth. Greens, purples, 
-            blues, and pinks dance across the polar skies.
-          </p>
-          <p className="text-lg leading-relaxed mb-4">
-            People around the world step outside to watch, cameras ready, hearts full of wonder. 
-            "It's the most beautiful aurora we've ever seen!" they exclaim.
-          </p>
-          <p className="text-lg leading-relaxed mb-6">
-            {teamedUp && (
-              <>Luna joins Sunny, and together they create an aurora symphony. "We make a good team," 
-              Luna says with a smile. </>
-            )}
-            Sunny realizes that even a small solar flare can bring joy to billions. Sometimes, 
-            the best adventures end with beauty and wonder.
-          </p>
-          <p className="text-2xl text-center font-bold aurora-gradient text-transparent bg-clip-text">
-            ✨ The Light That United the World ✨
-          </p>
-        </>
-      ),
-    };
+      detail: `Not every hero needs a team. Sunny drifts through space, leaving trails of light and wonder. Luna watches from afar, hoping one day they'll reconnect. The cosmos is vast, and Sunny has all the time in the universe.`,
+    },
+    'earth-protector': {
+      title: '🛡️ Earth\'s Guardian',
+      icon: Globe,
+      description: 'Sunny dedicates their existence to shielding Earth from dangerous solar events, becoming a silent protector.',
+      color: 'text-primary',
+      detail: `Professor Photon monitors Sunny's heroic efforts. When massive CMEs threaten Earth, Sunny deflects them. The planet below may never know their name, but Sunny doesn't need fame—protecting life is reward enough.`,
+    },
+    'aurora-festival': {
+      title: '🌈 Aurora Festival!',
+      icon: Heart,
+      description: 'Sunny creates the most beautiful auroras Earth has ever seen, bringing joy and wonder to millions!',
+      color: 'text-secondary',
+      detail: `People from every country gather to watch the magical light show. Scientists marvel, artists paint, children point in awe. Sunny learns that sometimes the greatest adventure is bringing happiness to others.`,
+    },
   };
 
-  const ending = getEnding();
-  const EndingIcon = ending.icon;
+  const currentEnding = endings[ending as keyof typeof endings];
+  const EndingIcon = currentEnding.icon;
 
   return (
     <motion.div
       className="min-h-screen flex flex-col items-center justify-center p-8 relative z-10"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.5 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 1.2 }}
     >
-      <div className="max-w-4xl w-full space-y-8">
+      <div className="max-w-5xl w-full space-y-8">
         <motion.div
-          className="text-center"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.5, type: 'spring' }}
+          className="text-center space-y-6"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
         >
-          <EndingIcon className={`w-32 h-32 mx-auto mb-6 ${ending.color} glow-solar`} />
-          <h1 className={`text-6xl font-bold mb-4 ${ending.color} text-glow`}>
-            {ending.title}
+          <motion.div
+            className="flex justify-center mb-6"
+            animate={{
+              scale: [1, 1.2, 1],
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <EndingIcon className={`w-24 h-24 ${currentEnding.color}`} />
+          </motion.div>
+
+          <h1 className={`text-7xl font-fredoka font-bold mb-6 ${currentEnding.color} text-glow`}>
+            {currentEnding.title}
           </h1>
-          <p className="text-2xl text-muted-foreground mb-8">
-            {ending.description}
-          </p>
         </motion.div>
 
-        {/* Character Lineup */}
+        {/* Character Sprites Based on Ending */}
         <motion.div
-          className="flex justify-center gap-6 flex-wrap my-12"
+          className="flex justify-center gap-8 my-12 flex-wrap"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.3 }}
         >
-          <CharacterSprite character="sunny" emotion="happy" size="md" />
-          <CharacterSprite character="luna" emotion="happy" size="md" />
-          <CharacterSprite character="sally" emotion="happy" size="md" />
-          <CharacterSprite character="astronaut" emotion="happy" size="md" />
-          <CharacterSprite character="professor" emotion="excited" size="md" />
+          <CharacterSprite character="sunny" emotion="happy" size="lg" />
+          {(ending === 'epic-heroes' || story.lunaRelationship === 'mentor' || story.lunaRelationship === 'friend') && (
+            <CharacterSprite character="luna" emotion="happy" size="lg" />
+          )}
+          {(ending === 'epic-heroes' || story.sallyTrust === 'trusted') && (
+            <CharacterSprite character="sally" emotion="happy" size="lg" />
+          )}
+          {(ending === 'epic-heroes' || story.astronautStatus === 'ally') && (
+            <CharacterSprite character="astronaut" emotion="happy" size="lg" />
+          )}
+          {ending === 'earth-protector' && (
+            <CharacterSprite character="professor" emotion="excited" size="lg" />
+          )}
         </motion.div>
 
-        {/* Ending Story */}
         <motion.div
-          className="bg-card/80 backdrop-blur-md rounded-3xl p-10 border border-border shadow-cosmic"
+          className="bg-card/60 backdrop-blur-xl rounded-3xl p-10 border-2 border-primary/30 shadow-cosmic space-y-6"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.5 }}
         >
-          {ending.story}
-        </motion.div>
+          <p className="text-2xl font-fredoka leading-relaxed text-center font-bold">
+            {currentEnding.description}
+          </p>
+          <p className="text-lg font-space leading-relaxed text-center text-muted-foreground">
+            {currentEnding.detail}
+          </p>
 
-        {/* Journey Summary */}
-        <motion.div
-          className="bg-card/60 backdrop-blur-md rounded-2xl p-6 border border-border"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.3 }}
-        >
-          <h3 className="text-xl font-bold mb-4 text-center text-accent">Your Journey:</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            {story.decisions.map((decision, index) => (
-              <div key={index} className="flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <span className="font-bold text-primary">Act {decision.actId}:</span>{' '}
-                  <span className="text-muted-foreground">{decision.description}</span>
-                </div>
-              </div>
-            ))}
+          {/* Story Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-border">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary">{story.heroismScore}</div>
+              <div className="text-sm text-muted-foreground font-space">Heroism</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-destructive">{story.chaosLevel}</div>
+              <div className="text-sm text-muted-foreground font-space">Chaos</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-accent">{story.decisions.length}</div>
+              <div className="text-sm text-muted-foreground font-space">Decisions</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-secondary">{story.visitedNodes.length + 1}</div>
+              <div className="text-sm text-muted-foreground font-space">Nodes Visited</div>
+            </div>
+          </div>
+
+          <div className="pt-6 space-y-4">
+            <p className="text-center text-xl font-fredoka font-bold text-primary">
+              🎭 Your Unique Story Path 🎭
+            </p>
+            <p className="text-center text-lg font-space text-foreground/80">
+              Personality: <span className="font-bold capitalize text-accent">{story.sunnyPersonality}</span>
+            </p>
+            <div className="flex justify-center gap-6 flex-wrap text-sm font-space">
+              <span>🌙 Luna: <span className="capitalize">{story.lunaRelationship}</span></span>
+              <span>📡 Sally: <span className="capitalize">{story.sallyTrust}</span></span>
+              <span>🚀 Astronaut: <span className="capitalize">{story.astronautStatus}</span></span>
+            </div>
           </div>
         </motion.div>
 
-        {/* Play Again */}
         <motion.div
-          className="flex justify-center"
+          className="bg-accent/10 rounded-2xl p-6 border border-accent/30"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <p className="text-center text-lg font-fredoka mb-4">
+            ✨ <span className="font-bold">Every choice created YOUR unique story!</span> ✨
+          </p>
+          <p className="text-center text-muted-foreground font-space">
+            Want to see a different ending? Try making different choices next time!
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="flex flex-col md:flex-row gap-6 justify-center"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.6 }}
+          transition={{ delay: 1.2 }}
         >
           <ChoiceButton onClick={resetStory} variant="solar">
-            🔄 Play Again & Explore New Paths!
+            <span className="text-xl font-fredoka">🔄 Start a New Adventure!</span>
           </ChoiceButton>
         </motion.div>
+
+        <motion.p
+          className="text-center text-muted-foreground text-sm font-space italic"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          "In space, every flare writes its own story..." ✨
+        </motion.p>
       </div>
     </motion.div>
   );

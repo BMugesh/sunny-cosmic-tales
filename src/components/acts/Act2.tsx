@@ -4,24 +4,28 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act2 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const wasLazy = story.decisions[0]?.choice === 'stretch';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const stretchedEarly = story.decisions[0]?.choice === 'stretch';
 
-  const handleChoice = (choice: 'follow' | 'ignore') => {
+  const handleChoice = (choice: 'follow' | 'explore') => {
     const descriptions = {
       follow: 'Followed Luna',
-      ignore: 'Ignored Luna',
+      explore: 'Explored alone',
     };
-    makeDecision(2, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('luna-meeting', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
     <motion.div
       className="min-h-screen flex flex-col items-center justify-center p-8 relative z-10"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -100 }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ duration: 0.6 }}
     >
       <div className="max-w-4xl w-full space-y-8">
         <motion.div
@@ -29,18 +33,14 @@ export const Act2 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-secondary text-glow">
-            Act 2: Meeting Luna
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-secondary text-glow">
+            🌙 Meeting Luna
           </h1>
-          <p className="text-xl text-muted-foreground">
-            {wasLazy 
-              ? "Still waking up, Sunny drifts through space..."
-              : "Zooming through space, Sunny spots something shiny!"
-            }
+          <p className="text-xl text-muted-foreground font-space">
+            A mysterious figure glows in the distance...
           </p>
         </motion.div>
 
-        {/* Characters */}
         <motion.div
           className="flex justify-center gap-12 my-12"
           initial={{ scale: 0 }}
@@ -49,7 +49,7 @@ export const Act2 = () => {
         >
           <CharacterSprite 
             character="sunny" 
-            emotion={wasLazy ? 'neutral' : 'excited'} 
+            emotion={stretchedEarly ? 'neutral' : 'excited'} 
             size="lg" 
           />
           <CharacterSprite 
@@ -65,20 +65,25 @@ export const Act2 = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-lg leading-relaxed mb-4">
-            "Well, well, well... look who's finally up!" Luna the Moon appears, 
-            spinning gracefully. Her crater-face grins mischievously. 
-            {wasLazy 
-              ? " \"Took your time, didn't you, sleepyhead?\""
-              : " \"Someone's got energy today! Race you to Earth?\""
-            }
+          <p className="text-lg font-fredoka leading-relaxed mb-4">
+            "Well, well, well... look who finally woke up!" A silvery voice echoes through space. 
+            It's Luna, a wise and slightly sassy moon orbiting nearby.
           </p>
-          <p className="text-lg leading-relaxed mb-6">
-            Luna seems to know something Sunny doesn't. Her eyes twinkle with secrets 
-            and maybe a little bit of teasing. She gestures toward distant Earth.
-          </p>
-          <p className="text-lg leading-relaxed text-accent italic font-bold">
-            "Follow me if you dare! Or... go your own way. Your choice, sparkles!" 
+          {stretchedEarly ? (
+            <p className="text-lg font-fredoka leading-relaxed mb-6">
+              "Took your sweet time, didn't you?" Luna chuckles. "I've been watching solar 
+              flares zip by all morning. You're the slowest one yet! But hey, slow and steady 
+              wins the space race, right?"
+            </p>
+          ) : (
+            <p className="text-lg font-fredoka leading-relaxed mb-6">
+              "Whoa! Someone's in a hurry!" Luna laughs. "You shot out of there like a rocket! 
+              I like your energy, little flare. Want some company on your journey?"
+            </p>
+          )}
+          <p className="text-lg font-space leading-relaxed text-muted-foreground italic">
+            Luna knows all the shortcuts through space and has seen countless adventures. 
+            Following her could be wise... or Sunny could explore alone and forge their own path!
           </p>
         </motion.div>
 
@@ -89,10 +94,10 @@ export const Act2 = () => {
           transition={{ delay: 0.8 }}
         >
           <ChoiceButton onClick={() => handleChoice('follow')} variant="lunar">
-            🌙 Follow Luna's lead
+            🌙 Follow Luna's guidance
           </ChoiceButton>
-          <ChoiceButton onClick={() => handleChoice('ignore')} variant="solar">
-            ⚡ Ignore her and blaze your own trail!
+          <ChoiceButton onClick={() => handleChoice('explore')} variant="solar">
+            ⭐ Explore space alone
           </ChoiceButton>
         </motion.div>
       </div>

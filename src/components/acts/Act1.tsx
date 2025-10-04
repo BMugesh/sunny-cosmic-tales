@@ -4,15 +4,18 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act1 = () => {
-  const { makeDecision, nextAct } = useStory();
+  const { makeDecision, navigateToNode, getNextNode } = useStory();
 
   const handleChoice = (choice: 'stretch' | 'zoom') => {
     const descriptions = {
-      stretch: 'Lazy stretch',
-      zoom: 'Excited zoom',
+      stretch: 'Stretched lazily',
+      zoom: 'Zoomed excitedly',
     };
-    makeDecision(1, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('intro', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -30,10 +33,10 @@ export const Act1 = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-primary text-glow">
-            Act 1: Sunny Awakens
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-primary text-glow">
+            ☀️ Sunny Awakens!
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-muted-foreground font-space">
             Deep in the Sun's core, a spark of energy begins to stir...
           </p>
         </motion.div>
@@ -55,12 +58,12 @@ export const Act1 = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <p className="text-lg leading-relaxed mb-6">
+          <p className="text-lg font-fredoka leading-relaxed mb-6">
             "Mmm... is it time already?" yawns Sunny, a tiny but mighty solar flare. 
             The Sun's magnetic fields crackle around them like a warm blanket. 
             Today feels... different. Special. Maybe even <span className="text-accent font-bold">adventure-ish</span>?
           </p>
-          <p className="text-lg leading-relaxed text-muted-foreground italic">
+          <p className="text-lg font-space leading-relaxed text-muted-foreground italic">
             Sunny has two choices: stretch lazily and take their time, or burst out 
             with maximum energy and zoom into space!
           </p>

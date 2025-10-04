@@ -4,16 +4,19 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act8 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const listenedToProfessor = story.decisions[6]?.choice === 'listen';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const listenedToProfessor = story.decisions.find(d => d.nodeId === 'professor-photon')?.choice === 'listen';
 
   const handleChoice = (choice: 'join' | 'protect') => {
     const descriptions = {
       join: 'Joined CME party',
       protect: 'Protected Earth',
     };
-    makeDecision(8, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('cosmic-event', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -29,8 +32,8 @@ export const Act8 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-primary text-glow animate-pulse-glow">
-            Act 8: The Big Cosmic Event
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-primary text-glow animate-pulse-glow">
+            💥 The Big Cosmic Event
           </h1>
           <p className="text-xl text-muted-foreground">
             Something HUGE is happening!

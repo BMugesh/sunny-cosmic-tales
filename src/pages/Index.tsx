@@ -19,35 +19,26 @@ const StoryContent = () => {
   const [started, setStarted] = useState(false);
   const { story } = useStory();
 
-  const renderAct = () => {
+  const renderNode = () => {
     if (!started) {
       return <IntroScreen onStart={() => setStarted(true)} />;
     }
 
-    switch (story.currentAct) {
-      case 1:
-        return <Act1 />;
-      case 2:
-        return <Act2 />;
-      case 3:
-        return <Act3 />;
-      case 4:
-        return <Act4 />;
-      case 5:
-        return <Act5 />;
-      case 6:
-        return <Act6 />;
-      case 7:
-        return <Act7 />;
-      case 8:
-        return <Act8 />;
-      case 9:
-        return <Act9 />;
-      case 10:
-        return <Act10 />;
-      default:
-        return <Act10 />;
-    }
+    // Map node IDs to components (non-linear rendering)
+    const nodeComponents: Record<string, JSX.Element> = {
+      'intro': <Act1 />,
+      'luna-meeting': <Act2 />,
+      'sally-encounter': <Act3 />,
+      'deep-space': <Act4 />,
+      'astronaut-crisis': <Act5 />,
+      'earth-atmosphere': <Act6 />,
+      'professor-photon': <Act7 />,
+      'cosmic-event': <Act8 />,
+      'luna-reunion': <Act9 />,
+      'finale': <Act10 />,
+    };
+
+    return nodeComponents[story.currentNodeId] || <Act10 />;
   };
 
   return (
@@ -55,7 +46,7 @@ const StoryContent = () => {
       <StarField />
       {started && <ProgressTracker />}
       <AnimatePresence mode="wait">
-        {renderAct()}
+        {renderNode()}
       </AnimatePresence>
     </>
   );
@@ -64,7 +55,7 @@ const StoryContent = () => {
 const Index = () => {
   return (
     <StoryProvider>
-      <div className="min-h-screen overflow-hidden" data-theme="cosmic">
+      <div className="min-h-screen overflow-hidden font-fredoka" data-theme="cosmic">
         <StoryContent />
       </div>
     </StoryProvider>

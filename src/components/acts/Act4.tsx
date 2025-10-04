@@ -4,16 +4,19 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act4 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const helpedSally = story.decisions[2]?.choice === 'help';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const helpedSally = story.decisions.find(d => d.nodeId === 'sally-encounter')?.choice === 'help';
 
-  const handleChoice = (choice: 'careful' | 'wild') => {
+  const handleChoice = (choice: 'careful' | 'tricks') => {
     const descriptions = {
-      careful: 'Careful navigation',
-      wild: 'Wild space ride',
+      careful: 'Traveled carefully',
+      tricks: 'Did space tricks',
     };
-    makeDecision(4, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('deep-space', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -30,10 +33,10 @@ export const Act4 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 text-primary text-glow">
-            Act 4: Deep Space
+          <h1 className="text-6xl font-fredoka font-bold mb-4 text-purple-400 text-glow">
+            🌌 Deep Space
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-muted-foreground font-space">
             The vast emptiness of space stretches ahead...
           </p>
         </motion.div>
@@ -57,25 +60,25 @@ export const Act4 = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-lg leading-relaxed mb-4">
+          <p className="text-lg font-fredoka leading-relaxed mb-4">
             The darkness between planets is... well, dark! And quiet. And maybe a little bit spooky.
           </p>
           {helpedSally ? (
-            <p className="text-lg leading-relaxed mb-6">
+            <p className="text-lg font-fredoka leading-relaxed mb-6">
               "BEEP! Safe route ahead!" Sally's voice crackles through space. 
               "Thanks for being nice, Sunny! Here's a shortcut that avoids the asteroid belt!"
             </p>
           ) : (
-            <p className="text-lg leading-relaxed mb-6">
+            <p className="text-lg font-fredoka leading-relaxed mb-6">
               Without Sally's help, Sunny is flying solo. There might be asteroids ahead, 
               or maybe... a comet party? Who knows! Space is full of surprises!
             </p>
           )}
-          <p className="text-lg leading-relaxed mb-6">
+          <p className="text-lg font-fredoka leading-relaxed mb-6">
             Sunny has two ways to cross this cosmic void: take it slow and careful, 
             or put on a wild space show with loops and swirls!
           </p>
-          <p className="text-lg leading-relaxed text-accent italic font-bold">
+          <p className="text-lg font-space leading-relaxed text-accent italic font-bold">
             What's it gonna be, space traveler?
           </p>
         </motion.div>
@@ -89,7 +92,7 @@ export const Act4 = () => {
           <ChoiceButton onClick={() => handleChoice('careful')} variant="lunar">
             🛡️ Navigate carefully and safely
           </ChoiceButton>
-          <ChoiceButton onClick={() => handleChoice('wild')} variant="solar">
+          <ChoiceButton onClick={() => handleChoice('tricks')} variant="solar">
             🎢 Go wild with cosmic acrobatics!
           </ChoiceButton>
         </motion.div>

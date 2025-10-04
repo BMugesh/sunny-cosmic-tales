@@ -4,16 +4,19 @@ import { ChoiceButton } from '../ChoiceButton';
 import { useStory } from '@/contexts/StoryContext';
 
 export const Act6 = () => {
-  const { makeDecision, nextAct, story } = useStory();
-  const savedAstronaut = story.decisions[4]?.choice === 'save';
+  const { makeDecision, navigateToNode, getNextNode, story } = useStory();
+  const savedAstronaut = story.decisions.find(d => d.nodeId === 'astronaut-crisis')?.choice === 'save';
 
   const handleChoice = (choice: 'gentle' | 'strong') => {
     const descriptions = {
       gentle: 'Gentle auroras',
       strong: 'Strong interference',
     };
-    makeDecision(6, choice, descriptions[choice]);
-    nextAct();
+    makeDecision('earth-atmosphere', choice, descriptions[choice]);
+    const nextNode = getNextNode();
+    if (nextNode) {
+      navigateToNode(nextNode.id);
+    }
   };
 
   return (
@@ -29,8 +32,8 @@ export const Act6 = () => {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          <h1 className="text-6xl font-bold mb-4 aurora-gradient text-transparent bg-clip-text text-glow">
-            Act 6: Earth's Atmosphere
+          <h1 className="text-6xl font-fredoka font-bold mb-4 aurora-gradient text-transparent bg-clip-text text-glow">
+            🌍 Earth's Atmosphere
           </h1>
           <p className="text-xl text-muted-foreground">
             The beautiful blue planet comes into view!
